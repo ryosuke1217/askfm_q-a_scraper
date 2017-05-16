@@ -9,6 +9,8 @@ import sys
 import urllib.request
 from http.client import BadStatusLine
 from http.client import IncompleteRead
+import codecs
+import datetime
 
 args = sys.argv
 word = args[1]
@@ -33,12 +35,23 @@ print('load complete')
 
 page_source = driver.page_source
 
-#val = driver.execute_script('var h = document.getElementsByClassName("streamItemContent streamItemContent-question"); return h')
 questions = driver.find_elements_by_class_name("streamItemContent-question")
 answers = driver.find_elements_by_class_name("answerWrapper")
 
-qa = [(q.find_element_by_tag_name('h2').text, a.find_element_by_tag_name('p').text) for q, a in zip(questions, answers)]
+qas = [(q.find_element_by_tag_name('h2').text, a.find_element_by_tag_name('p').text) for q, a in zip(questions, answers)]
 
+print('find complete')
 
+with codecs.open('data/askfm_data_' + word + '.txt', 'w', 'utf-8') as f:
+    for q, a in qas:
+        if q == '' or a == '' or 'http' in q or 'http' in a:
+            continue
+        q = q.replace('\n', '')
+        a = a.replace('\n', '')
+        f.write(q)
+        f.write('\n')
+        f.write(a)
+        f.write('\n')
+        f.write('\n')
 
 driver.quit()
