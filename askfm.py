@@ -19,18 +19,16 @@ driver = webdriver.Chrome()
 
 driver.get("https://ask.fm/" + word)
 
-judge = 10000000
 while True:
     scroll_h = driver.execute_script("var h = window.pageYOffset; return h")
-    if scroll_h != judge:
-        judge = driver.execute_script("var m = window.pageYOffset; return m")
-        previous_h = driver.execute_script("var h = window.pageYOffset; return h")
-        #スクロール
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        sleep(3)
-        after_h = driver.execute_script("var h = window.pageYOffset; return h")
-        if previous_h == after_h:
-            break
+    judge = driver.execute_script("var m = window.pageYOffset; return m")
+    previous_h = driver.execute_script("var h = window.pageYOffset; return h")
+    #スクロール
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    sleep(3)
+    after_h = driver.execute_script("var h = window.pageYOffset; return h")
+    if previous_h == after_h:
+        break
 print('load complete')
 
 page_source = driver.page_source
